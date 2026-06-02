@@ -6,6 +6,7 @@ use App\Http\Controllers\Member\CouponController as MemberCouponController;
 use App\Http\Controllers\Member\DashboardController as MemberDashboardController;
 use App\Http\Controllers\Member\PostController as MemberPostController;
 use App\Http\Controllers\Member\StoreController as MemberStoreController;
+use App\Http\Controllers\EditorImageController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\HomeController;
@@ -55,6 +56,9 @@ Route::middleware(['guest', 'noindex'])->group(function () {
 });
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::middleware(['auth', 'noindex'])->post('/editor/upload-image', [EditorImageController::class, 'store'])
+    ->name('editor.upload-image');
 
 Route::middleware(['auth', 'noindex'])->prefix('dashboard')->name('member.')->group(function () {
     Route::get('/', [MemberDashboardController::class, 'index'])->name('dashboard');
