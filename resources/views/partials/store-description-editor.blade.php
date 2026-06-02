@@ -5,7 +5,7 @@
 @endphp
 <div class="form-group">
     <label for="{{ $editorId }}">Description</label>
-    <p class="form-hint">Rich text editor — format text, insert links, and <strong>upload images</strong> (saved to your account folder <code>editor/{{ auth()->id() }}/</code>).</p>
+    <p class="form-hint">Rich text editor — format text, insert links, and <strong>upload images</strong> (max 10MB, JPG/PNG/WebP/GIF). Saved to <code>editor/{{ auth()->id() }}/</code>.</p>
     <textarea name="description" id="{{ $editorId }}" class="rich-editor-source" hidden>{{ $content }}</textarea>
     <div id="{{ $quillId }}" class="quill-editor-mount" data-upload-url="{{ route('editor.upload-image') }}"></div>
 </div>
@@ -59,6 +59,11 @@
 
                         var range = quill.getSelection(true) || { index: quill.getLength() };
 
+                        if (file.size > 10 * 1024 * 1024) {
+                            alert('Image is too large. Maximum size is 10 MB.');
+                            return;
+                        }
+
                         fetch(uploadUrl, {
                             method: 'POST',
                             headers: {
@@ -69,15 +74,20 @@
                             credentials: 'same-origin',
                         })
                             .then(function (res) {
-                                if (!res.ok) throw new Error('Upload failed');
-                                return res.json();
+                                return res.json().then(function (data) {
+                                    if (!res.ok) {
+                                        throw new Error(data.message || 'Upload failed');
+                                    }
+                                    return data;
+                                });
                             })
                             .then(function (data) {
+                                if (!data.url) throw new Error('No image URL returned');
                                 quill.insertEmbed(range.index, 'image', data.url, 'user');
                                 quill.setSelection(range.index + 1);
                             })
-                            .catch(function () {
-                                alert('Image upload failed. Use JPG, PNG, WebP or GIF under 5MB.');
+                            .catch(function (err) {
+                                alert(err.message || 'Image upload failed. Use JPG, PNG, WebP or GIF under 10MB.');
                             });
                     };
                 }
