@@ -23,6 +23,10 @@
 
 ## Setup
 
+## Production deploy
+
+See [deploy/DEPLOY.md](deploy/DEPLOY.md) and [deploy/nginx.conf](deploy/nginx.conf).
+
 ```bash
 php artisan migrate:fresh --seed
 php artisan serve
