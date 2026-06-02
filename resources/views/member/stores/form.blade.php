@@ -16,11 +16,11 @@
             </div>
         @endif
         <input type="file" name="logo_file" accept="image/*" style="margin-top:.5rem;">
-        <p class="form-hint">Upload JPG, PNG or WebP (max 2MB). Or paste an external URL below.</p>
+        <p class="form-hint">Upload JPG, PNG or WebP (max 2MB). Files are saved in your account folder <code>stores/{{ auth()->id() }}/</code>. Or paste an external image URL below.</p>
         <input name="logo" value="{{ old('logo', $store->hasStoredLogo() ? '' : $store->logo) }}" placeholder="https://example.com/logo.png" style="margin-top:.5rem;">
     </div>
-    <div class="form-group"><label>Website</label><input type="url" name="website" value="{{ old('website', $store->website) }}"></div>
-    <div class="form-group"><label>Description</label><textarea name="description" rows="3">{{ old('description', $store->description) }}</textarea></div>
+    @include('partials.store-website-field', ['store' => $store])
+    @include('partials.store-description-editor', ['value' => $store->description, 'editorId' => 'store-description'])
     <div class="form-group"><label>Sort order</label><input type="number" name="sort_order" value="{{ old('sort_order', $store->sort_order ?? 0) }}"></div>
     <div class="form-check">
         <input type="checkbox" name="is_active" value="1" @checked(old('is_active', $store->is_active ?? true))>

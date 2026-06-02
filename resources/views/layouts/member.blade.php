@@ -8,6 +8,7 @@
     <title>@yield('title') — My Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    @stack('styles')
 </head>
 <body>
 <div class="admin-layout">
@@ -15,8 +16,8 @@
         <p style="font-weight:700;margin-bottom:1rem;">{{ config('site.name') }}</p>
         <p style="font-size:.85rem;opacity:.85;margin-bottom:1rem;">{{ auth()->user()->name }}</p>
         <a href="{{ route('member.dashboard') }}">Dashboard</a>
-        <a href="{{ route('member.coupons.index') }}">My Coupons</a>
         <a href="{{ route('member.stores.index') }}">My Stores</a>
+        <a href="{{ route('member.coupons.index') }}">My Coupons</a>
         <a href="{{ route('member.posts.index') }}">My Blog</a>
         <hr style="border-color:rgba(255,255,255,.2);margin:1rem 0;">
         <a href="{{ route('home') }}">← Back to site</a>
@@ -35,5 +36,6 @@
         @yield('content')
     </main>
 </div>
+@stack('scripts')
 </body>
 </html>

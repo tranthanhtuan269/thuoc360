@@ -885,3 +885,27 @@ a:hover { text-decoration: underline; }
     .admin-layout { flex-direction: column; }
     .admin-sidebar { width: 100%; }
 }
+
+.store-description-content {
+    margin-bottom: 1.5rem;
+    color: #374151;
+    line-height: 1.75;
+    max-width: 72ch;
+}
+.store-description-content h2,
+.store-description-content h3,
+.store-description-content h4 {
+    color: var(--secondary, #1e293b);
+    margin: 1.5rem 0 .75rem;
+}
+.store-description-content p { margin-bottom: 1rem; }
+.store-description-content ul,
+.store-description-content ol { margin: 0 0 1rem 1.25rem; }
+.store-description-content a { color: var(--primary); }
+.store-description-content img { max-width: 100%; height: auto; border-radius: 8px; }
+.form-hint code {
+    font-size: .8em;
+    background: #f1f5f9;
+    padding: .1rem .35rem;
+    border-radius: 4px;
+}

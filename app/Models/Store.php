@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\HtmlCleaner;
 use App\Support\PublicImage;
 use App\Support\Seo;
 use Illuminate\Database\Eloquent\Builder;
@@ -116,7 +117,7 @@ class Store extends Model
     public function seoDescription(): string
     {
         $count = $this->activeCouponsCount();
-        $base = $this->description
+        $base = HtmlCleaner::plainText($this->description)
             ?: "Browse {$count} verified {$this->name} coupon codes and discount deals. Updated daily on " . config('site.name') . '.';
 
         return Seo::description($base);

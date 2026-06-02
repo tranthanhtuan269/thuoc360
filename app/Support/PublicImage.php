@@ -29,7 +29,28 @@ final class PublicImage
 
     public static function store(UploadedFile $file, string $directory): string
     {
+        self::ensureDirectory($directory);
+
         return $file->store($directory, 'public');
+    }
+
+    /**
+     * Store under stores/{userId}/ (creates folder if missing).
+     */
+    public static function storeForUser(UploadedFile $file, int|string $userId, string $base = 'stores'): string
+    {
+        $directory = trim($base, '/') . '/' . $userId;
+
+        return self::store($file, $directory);
+    }
+
+    public static function ensureDirectory(string $directory): void
+    {
+        $path = trim($directory, '/');
+
+        if ($path !== '' && ! Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->makeDirectory($path);
+        }
     }
 
     public static function delete(?string $path): void

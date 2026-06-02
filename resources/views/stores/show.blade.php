@@ -41,7 +41,7 @@
         </div>
     </div>
     @if($store->description)
-        <p style="margin-bottom:1.5rem;color:var(--muted);">{{ $store->description }}</p>
+        <div class="store-description-content">{!! $store->description !!}</div>
     @endif
     <div class="coupon-grid">
         @forelse($coupons as $coupon)

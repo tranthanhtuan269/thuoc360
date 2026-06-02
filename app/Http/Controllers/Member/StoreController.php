@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Member;
 
 use App\Http\Controllers\Controller;
 use App\Models\Store;
+use App\Support\HtmlCleaner;
 use App\Support\PublicImage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -37,7 +38,8 @@ class StoreController extends Controller
 
         $data = $this->validated($request);
         $data['slug'] = $this->uniqueSlug($data['name']);
-        $data['logo'] = $this->resolveLogo($request, $data['logo'] ?? null);
+        $data['logo'] = $this->resolveLogo($request, $data['logo'] ?? null, null, auth()->id());
+        $data['description'] = HtmlCleaner::clean($data['description'] ?? null);
         $data['user_id'] = auth()->id();
 
         Store::create($data);
@@ -57,7 +59,8 @@ class StoreController extends Controller
         $this->authorize('update', $store);
 
         $data = $this->validated($request);
-        $data['logo'] = $this->resolveLogo($request, $request->input('logo'), $store->logo);
+        $data['logo'] = $this->resolveLogo($request, $request->input('logo'), $store->logo, $store->user_id ?? auth()->id());
+        $data['description'] = HtmlCleaner::clean($data['description'] ?? null);
         $store->update($data);
 
         return redirect()->route('member.stores.index')->with('success', 'Store updated successfully.');
@@ -93,12 +96,14 @@ class StoreController extends Controller
         return $data;
     }
 
-    private function resolveLogo(Request $request, ?string $logoUrl, ?string $existing = null): ?string
+    private function resolveLogo(Request $request, ?string $logoUrl, ?string $existing = null, int|string|null $userId = null): ?string
     {
+        $userId = $userId ?? auth()->id();
+
         if ($request->hasFile('logo_file')) {
             PublicImage::delete($existing);
 
-            return PublicImage::store($request->file('logo_file'), 'stores');
+            return PublicImage::storeForUser($request->file('logo_file'), $userId);
         }
 
         if (filled($logoUrl)) {
