@@ -38,6 +38,7 @@ class StoreController extends Controller
         $this->authorize('create', Store::class);
 
         $data = $this->validatedStore($request);
+        unset($data['sort_order']);
         $data['logo'] = $this->resolveLogo($request, $data['logo'] ?? null, null, auth()->id());
         $data['user_id'] = auth()->id();
 
@@ -58,6 +59,7 @@ class StoreController extends Controller
         $this->authorize('update', $store);
 
         $data = $this->validatedStore($request, $store);
+        unset($data['sort_order']);
         $data['logo'] = $this->resolveLogo($request, $request->input('logo'), $store->logo, $store->user_id ?? auth()->id());
 
         $store->update($data);

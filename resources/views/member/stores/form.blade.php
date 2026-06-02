@@ -21,7 +21,6 @@
     </div>
     @include('partials.store-website-field', ['store' => $store])
     @include('partials.store-description-editor', ['value' => $store->description, 'editorId' => 'store-description'])
-    <div class="form-group"><label>Sort order</label><input type="number" name="sort_order" value="{{ old('sort_order', $store->sort_order ?? 0) }}"></div>
     <div class="form-check">
         <input type="checkbox" name="is_active" value="1" @checked(old('is_active', $store->is_active ?? true))>
         <label>Active (visible on public site)</label>
