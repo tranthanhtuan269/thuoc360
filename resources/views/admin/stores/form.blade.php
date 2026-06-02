@@ -7,7 +7,7 @@
 <form method="POST" enctype="multipart/form-data" action="{{ $store->exists ? route('admin.stores.update', $store) : route('admin.stores.store') }}">
     @csrf
     @if($store->exists) @method('PUT') @endif
-    <div class="form-group"><label>Name *</label><input name="name" value="{{ old('name', $store->name) }}" required></div>
+    @include('partials.store-slug-fields', ['store' => $store])
     <div class="form-group">
         <label>Logo</label>
         @if($store->logoUrl())

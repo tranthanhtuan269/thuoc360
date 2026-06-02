@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers\Member;
 
+use App\Http\Controllers\Concerns\ValidatesStoreInput;
 use App\Http\Controllers\Controller;
 use App\Models\Store;
-use App\Support\HtmlCleaner;
 use App\Support\PublicImage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class StoreController extends Controller
 {
+    use ValidatesStoreInput;
+
     public function index(): View
     {
         $this->authorize('viewAny', Store::class);
@@ -36,10 +37,8 @@ class StoreController extends Controller
     {
         $this->authorize('create', Store::class);
 
-        $data = $this->validated($request);
-        $data['slug'] = $this->uniqueSlug($data['name']);
+        $data = $this->validatedStore($request);
         $data['logo'] = $this->resolveLogo($request, $data['logo'] ?? null, null, auth()->id());
-        $data['description'] = HtmlCleaner::clean($data['description'] ?? null);
         $data['user_id'] = auth()->id();
 
         Store::create($data);
@@ -58,9 +57,9 @@ class StoreController extends Controller
     {
         $this->authorize('update', $store);
 
-        $data = $this->validated($request);
+        $data = $this->validatedStore($request, $store);
         $data['logo'] = $this->resolveLogo($request, $request->input('logo'), $store->logo, $store->user_id ?? auth()->id());
-        $data['description'] = HtmlCleaner::clean($data['description'] ?? null);
+
         $store->update($data);
 
         return redirect()->route('member.stores.index')->with('success', 'Store updated successfully.');
@@ -74,26 +73,6 @@ class StoreController extends Controller
         $store->delete();
 
         return redirect()->route('member.stores.index')->with('success', 'Store deleted successfully.');
-    }
-
-    private function validated(Request $request): array
-    {
-        $data = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'logo' => ['nullable', 'string', 'max:500'],
-            'logo_file' => ['nullable', 'image', 'max:2048'],
-            'website' => ['nullable', 'url', 'max:500'],
-            'description' => ['nullable', 'string'],
-            'sort_order' => ['nullable', 'integer', 'min:0'],
-            'is_active' => ['boolean'],
-        ]);
-
-        $data['is_active'] = $request->boolean('is_active', true);
-        $data['sort_order'] = $data['sort_order'] ?? 0;
-
-        unset($data['logo_file']);
-
-        return $data;
     }
 
     private function resolveLogo(Request $request, ?string $logoUrl, ?string $existing = null, int|string|null $userId = null): ?string
@@ -115,18 +94,5 @@ class StoreController extends Controller
         }
 
         return $existing;
-    }
-
-    private function uniqueSlug(string $name): string
-    {
-        $slug = Str::slug($name);
-        $original = $slug;
-        $i = 1;
-
-        while (Store::where('slug', $slug)->exists()) {
-            $slug = $original . '-' . $i++;
-        }
-
-        return $slug;
     }
 }
