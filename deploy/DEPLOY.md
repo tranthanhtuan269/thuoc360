@@ -8,7 +8,7 @@
 
 ```bash
 sudo mkdir -p /var/www/thuoc360
-sudo rsync -a --exclude='.git' --exclude='node_modules' ./ /var/www/thuoc360/
+sudo rsync -a --exclude='.git' --exclude='node_modules' --exclude='public/storage' ./ /var/www/thuoc360/
 cd /var/www/thuoc360
 composer install --no-dev --optimize-autoloader
 cp .env.example .env && php artisan key:generate
@@ -36,7 +36,15 @@ sudo certbot --nginx -d thuoc360.com -d www.thuoc360.com
 ```bash
 sudo chown -R www-data:www-data /var/www/thuoc360
 sudo chmod -R 775 storage bootstrap/cache
-sudo -u www-data php artisan storage:link config:cache route:cache view:cache
+sudo bash deploy/post-deploy.sh /var/www/thuoc360
+```
+
+Or manually:
+
+```bash
+rm -f /var/www/thuoc360/public/storage
+ln -sfn /var/www/thuoc360/storage/app/public /var/www/thuoc360/public/storage
+sudo -u www-data php artisan config:cache view:cache
 ```
 
 Admin: `https://thuoc360.com/login` — `admin@thuoc360.com` / `password` (change after deploy).
