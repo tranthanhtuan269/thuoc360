@@ -12,14 +12,15 @@
         <tr>
             <th>Logo</th>
             <th>Name</th>
-            <th>Public page</th>
+            <th>Category</th>
             <th>Coupons</th>
             <th>Page views</th>
-            <th></th>
+            <th class="table-actions-col">Actions</th>
         </tr>
     </thead>
     <tbody>
         @forelse($stores as $store)
+        @php $publicUrl = route('stores.show', $store->slug); @endphp
         <tr>
             <td>
                 @if($store->logoUrl())
@@ -30,20 +31,45 @@
             </td>
             <td>{{ $store->name }}</td>
             <td>
-                @if($store->is_active)
-                    <a href="{{ route('stores.show', $store->slug) }}" target="_blank" rel="noopener">View →</a>
+                @if($store->category)
+                    <span>{{ $store->category->icon }} {{ $store->category->name }}</span>
                 @else
-                    <span style="color:var(--muted);">Inactive</span>
+                    <span class="text-muted">—</span>
                 @endif
             </td>
             <td>{{ $store->coupons_count }}</td>
             <td><strong>{{ number_format($store->view_count) }}</strong></td>
             <td>
-                <a href="{{ route('member.stores.edit', $store) }}">Edit</a>
-                <form action="{{ route('member.stores.destroy', $store) }}" method="POST" style="display:inline;" onsubmit="return confirm('Delete this store and its coupons?')">
-                    @csrf @method('DELETE')
-                    <button type="submit" style="background:none;border:none;color:red;cursor:pointer;">Delete</button>
-                </form>
+                <div class="table-actions">
+                    @if($store->is_active)
+                        <a href="{{ $publicUrl }}" class="table-action-btn" target="_blank" rel="noopener" title="View public page" aria-label="View public page">
+                            @include('partials.icons.eye')
+                        </a>
+                    @else
+                        <span class="table-action-btn is-disabled" title="Store is inactive" aria-label="Store is inactive">
+                            @include('partials.icons.eye')
+                        </span>
+                    @endif
+                    <button
+                        type="button"
+                        class="table-action-btn js-copy-link"
+                        data-copy-url="{{ $publicUrl }}"
+                        title="Copy store link"
+                        aria-label="Copy store link"
+                    >
+                        @include('partials.icons.copy')
+                    </button>
+                    <a href="{{ route('member.stores.edit', $store) }}" class="table-action-btn" title="Edit store" aria-label="Edit store">
+                        @include('partials.icons.edit')
+                    </a>
+                    <form action="{{ route('member.stores.destroy', $store) }}" method="POST" class="table-action-form" onsubmit="return confirm('Delete this store and its coupons?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="table-action-btn table-action-btn-danger" title="Delete store" aria-label="Delete store">
+                            @include('partials.icons.trash')
+                        </button>
+                    </form>
+                </div>
             </td>
         </tr>
         @empty
@@ -53,3 +79,78 @@
 </table>
 {{ $stores->links() }}
 @endsection
+
+@once
+    @push('styles')
+        <style>
+            .table-actions-col { width: 9rem; text-align: right; }
+            .table-actions {
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                gap: .25rem;
+            }
+            .table-action-form { display: inline; margin: 0; }
+            .table-action-btn {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 2rem;
+                height: 2rem;
+                padding: 0;
+                border: none;
+                border-radius: 6px;
+                background: transparent;
+                color: #475569;
+                cursor: pointer;
+                text-decoration: none;
+                transition: background .15s, color .15s;
+            }
+            .table-action-btn:hover:not(.is-disabled):not(:disabled) {
+                background: #f1f5f9;
+                color: #0f172a;
+            }
+            .table-action-btn.is-disabled {
+                opacity: .35;
+                cursor: not-allowed;
+            }
+            .table-action-btn-danger:hover {
+                background: #fef2f2;
+                color: #dc2626;
+            }
+            .table-action-btn.is-copied {
+                color: #16a34a;
+            }
+            .text-muted { color: #94a3b8; }
+        </style>
+    @endpush
+    @push('scripts')
+        <script>
+            document.addEventListener('click', function (e) {
+                var btn = e.target.closest('.js-copy-link');
+                if (!btn) return;
+
+                var url = btn.getAttribute('data-copy-url');
+                if (!url) return;
+
+                function markCopied() {
+                    btn.classList.add('is-copied');
+                    btn.setAttribute('title', 'Copied!');
+                    setTimeout(function () {
+                        btn.classList.remove('is-copied');
+                        btn.setAttribute('title', 'Copy store link');
+                    }, 2000);
+                }
+
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(url).then(markCopied).catch(function () {
+                        window.prompt('Copy this link:', url);
+                    });
+                } else {
+                    window.prompt('Copy this link:', url);
+                    markCopied();
+                }
+            });
+        </script>
+    @endpush
+@endonce

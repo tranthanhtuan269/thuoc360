@@ -20,6 +20,7 @@ class StoreController extends Controller
         $this->authorize('viewAny', Store::class);
 
         $stores = Store::ownedBy(auth()->id())
+            ->with('category')
             ->withCount('coupons')
             ->orderBy('sort_order')
             ->paginate(20);
