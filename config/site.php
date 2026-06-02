@@ -20,4 +20,15 @@ return [
 
     'legal_last_updated' => 'June 2, 2026',
 
+    'default_description' => env(
+        'SITE_DESCRIPTION',
+        'THUOC360 is the Top Hub of US Online Coupons — verified promo codes, discount deals, and savings tips for Amazon, Walmart, Target, and top U.S. retailers.'
+    ),
+
+    'og_image' => env('SITE_OG_IMAGE') ?: null,
+
+    'twitter_handle' => env('SITE_TWITTER', '@thuoc360'),
+
+    'locale' => 'en_US',
+
 ];

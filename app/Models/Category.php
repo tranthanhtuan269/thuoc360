@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Seo;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
@@ -38,5 +39,18 @@ class Category extends Model
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
+    }
+
+    public function seoTitle(): string
+    {
+        return "{$this->name} Coupons & Deals";
+    }
+
+    public function seoDescription(): string
+    {
+        $base = $this->description
+            ?: "Shop {$this->name} coupon codes and online deals for U.S. stores. Curated offers on " . config('site.name') . '.';
+
+        return Seo::description($base);
     }
 }

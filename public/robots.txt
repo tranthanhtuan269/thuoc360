@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
+Disallow: /admin
+Disallow: /admin/
+Disallow: /login
+Disallow: /coupons/*/reveal
+Disallow: /coupons/*/go
 
 Sitemap: https://thuoc360.com/sitemap.xml

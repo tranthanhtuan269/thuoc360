@@ -2,6 +2,11 @@
 
 @section('title', $q ? "Blog Search: {$q}" : 'Blog — Coupon Tips & Savings Guides')
 @section('meta_description', 'Expert guides on coupon codes, online deals, and smart shopping tips for U.S. consumers. ' . config('site.tagline'))
+@section('canonical', $posts->currentPage() > 1 ? $posts->url($posts->currentPage()) : route('blog.index'))
+
+@push('head_links')
+    @include('partials.pagination-seo', ['paginator' => $posts])
+@endpush
 
 @section('content')
 <section class="page-hero">

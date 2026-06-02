@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Coupons & Discount Codes') — {{ config('site.name') }}</title>
-    <meta name="description" content="@yield('meta_description', config('site.tagline') . ' — Save with verified promo codes at ' . config('site.domain'))">
-    <link rel="canonical" href="@yield('canonical', config('site.url') . request()->getPathInfo())">
+    @include('partials.seo-head')
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ filemtime(public_path('css/app.css')) }}">
     @stack('styles')
+    @include('partials.site-schema')
+    @stack('structured_data')
 </head>
 <body>
     <header class="site-header">

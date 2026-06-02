@@ -1,6 +1,8 @@
 @extends('layouts.app')
 
-@section('title', 'Categories')
+@section('title', 'Coupon Categories')
+@section('meta_description', 'Browse coupon categories — fashion, electronics, travel, and more. Find deals by topic on ' . config('site.name') . '.')
+@section('canonical', route('categories.index'))
 
 @section('content')
 <div class="container">

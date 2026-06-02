@@ -1,6 +1,20 @@
 @extends('layouts.app')
 
-@section('title', $category->name)
+@section('title', $category->seoTitle())
+@section('meta_description', $category->seoDescription())
+@section('canonical', $coupons->currentPage() > 1 ? $coupons->url($coupons->currentPage()) : route('categories.show', $category->slug))
+
+@push('head_links')
+    @include('partials.pagination-seo', ['paginator' => $coupons])
+@endpush
+
+@push('structured_data')
+@include('partials.breadcrumb-schema', ['breadcrumbs' => [
+    ['name' => 'Home', 'url' => route('home')],
+    ['name' => 'Categories', 'url' => route('categories.index')],
+    ['name' => $category->name, 'url' => route('categories.show', $category->slug)],
+]])
+@endpush
 
 @section('content')
 <div class="container">

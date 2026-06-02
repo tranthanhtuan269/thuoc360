@@ -1,6 +1,28 @@
 @extends('layouts.app')
 
-@section('title', 'Home — Coupons & Discount Codes')
+@section('title', config('site.name') . ' — Top Hub of US Online Coupons and Promo Codes')
+@section('meta_description', config('site.default_description'))
+@section('canonical', route('home'))
+
+@push('structured_data')
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": @json(config('site.name')),
+    "url": @json(config('site.url')),
+    "description": @json(config('site.default_description')),
+    "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": @json(route('search') . '?q={search_term_string}')
+        },
+        "query-input": "required name=search_term_string"
+    }
+}
+</script>
+@endpush
 
 @section('content')
 <section class="hero">

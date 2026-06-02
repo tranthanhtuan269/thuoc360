@@ -24,6 +24,10 @@ class SitemapController extends Controller
             ['loc' => route('pages.contact'), 'priority' => '0.5', 'changefreq' => 'monthly'],
             ['loc' => route('pages.privacy'), 'priority' => '0.3', 'changefreq' => 'yearly'],
             ['loc' => route('pages.terms'), 'priority' => '0.3', 'changefreq' => 'yearly'],
+            ['loc' => route('pages.cookies'), 'priority' => '0.3', 'changefreq' => 'yearly'],
+            ['loc' => route('pages.disclaimer'), 'priority' => '0.3', 'changefreq' => 'yearly'],
+            ['loc' => route('coupons.index', ['type' => 'coupon']), 'priority' => '0.85', 'changefreq' => 'daily'],
+            ['loc' => route('coupons.index', ['type' => 'discount']), 'priority' => '0.85', 'changefreq' => 'daily'],
         ];
 
         foreach ($static as $item) {

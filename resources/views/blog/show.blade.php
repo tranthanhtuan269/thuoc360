@@ -3,6 +3,7 @@
 @section('title', $post->seoTitle())
 @section('meta_description', $post->seoDescription())
 @section('canonical', route('blog.show', $post->slug))
+@section('og_type', 'article')
 
 @push('styles')
 <style>
@@ -15,7 +16,7 @@
 </style>
 @endpush
 
-@push('scripts')
+@push('structured_data')
 <script type="application/ld+json">
 {
     "@context": "https://schema.org",
@@ -36,6 +37,11 @@
     "mainEntityOfPage": @json(route('blog.show', $post->slug))
 }
 </script>
+@include('partials.breadcrumb-schema', ['breadcrumbs' => [
+    ['name' => 'Home', 'url' => route('home')],
+    ['name' => 'Blog', 'url' => route('blog.index')],
+    ['name' => $post->title, 'url' => route('blog.show', $post->slug)],
+]])
 @endpush
 
 @section('content')

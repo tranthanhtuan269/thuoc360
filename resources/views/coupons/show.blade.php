@@ -1,6 +1,38 @@
 @extends('layouts.app')
 
-@section('title', $coupon->title)
+@section('title', $coupon->seoTitle())
+@section('meta_description', $coupon->seoDescription())
+@section('canonical', route('coupons.show', $coupon->slug))
+@section('og_type', 'article')
+@if($coupon->ogImageUrl())
+@section('og_image', $coupon->ogImageUrl())
+@endif
+
+@push('structured_data')
+@include('partials.breadcrumb-schema', ['breadcrumbs' => [
+    ['name' => 'Home', 'url' => route('home')],
+    ['name' => 'Coupons', 'url' => route('coupons.index')],
+    ['name' => $coupon->title, 'url' => route('coupons.show', $coupon->slug)],
+]])
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Offer",
+    "name": @json($coupon->title),
+    "description": @json($coupon->seoDescription()),
+    "url": @json(route('coupons.show', $coupon->slug)),
+    "category": @json($coupon->typeLabel()),
+    @if($coupon->expires_at)
+    "priceValidUntil": @json($coupon->expires_at->toDateString()),
+    @endif
+    "seller": {
+        "@type": "Organization",
+        "name": @json($coupon->store->name),
+        "url": @json($coupon->store->website)
+    }
+}
+</script>
+@endpush
 
 @section('content')
 <div class="container">

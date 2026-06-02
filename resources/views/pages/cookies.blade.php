@@ -1,6 +1,8 @@
 @extends('layouts.page')
 
 @section('title', 'Cookie Policy')
+@section('meta_description', 'THUOC360 Cookie Policy — types of cookies we use, analytics, and how to manage your preferences.')
+@section('canonical', route('pages.cookies'))
 
 @section('page_title', 'Cookie Policy')
 

@@ -16,12 +16,12 @@ use App\Http\Controllers\Admin\StoreController as AdminStoreController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/search', [HomeController::class, 'search'])->name('search');
+Route::get('/search', [HomeController::class, 'search'])->middleware('noindex')->name('search');
 
 Route::get('/coupons', [CouponController::class, 'index'])->name('coupons.index');
 Route::get('/coupons/{slug}', [CouponController::class, 'show'])->name('coupons.show');
-Route::post('/coupons/{slug}/reveal', [CouponController::class, 'reveal'])->name('coupons.reveal');
-Route::get('/coupons/{slug}/go', [CouponController::class, 'go'])->name('coupons.go');
+Route::post('/coupons/{slug}/reveal', [CouponController::class, 'reveal'])->middleware('noindex')->name('coupons.reveal');
+Route::get('/coupons/{slug}/go', [CouponController::class, 'go'])->middleware('noindex')->name('coupons.go');
 
 Route::get('/stores', [StoreController::class, 'index'])->name('stores.index');
 Route::get('/stores/{slug}', [StoreController::class, 'show'])->name('stores.show');
@@ -42,11 +42,14 @@ Route::get('/blog/{slug}', [BlogController::class, 'show'])->name('blog.show');
 
 Route::get('/sitemap.xml', [SitemapController::class, 'index'])->name('sitemap');
 
-Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [LoginController::class, 'login']);
+Route::middleware('noindex')->group(function () {
+    Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+    Route::post('/login', [LoginController::class, 'login']);
+});
+
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'noindex'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('coupons', AdminCouponController::class)->except(['show']);
     Route::resource('stores', AdminStoreController::class)->except(['show']);

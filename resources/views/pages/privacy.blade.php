@@ -1,6 +1,8 @@
 @extends('layouts.page')
 
 @section('title', 'Privacy Policy')
+@section('meta_description', 'THUOC360 Privacy Policy — how we collect, use, and protect your data. CCPA/CPRA disclosures for California residents.')
+@section('canonical', route('pages.privacy'))
 
 @section('page_title', 'Privacy Policy')
 

@@ -1,6 +1,8 @@
 @extends('layouts.page')
 
 @section('title', 'Terms of Service')
+@section('meta_description', 'THUOC360 Terms of Service — rules for using our coupon and deals website, affiliate disclosures, and user responsibilities.')
+@section('canonical', route('pages.terms'))
 
 @section('page_title', 'Terms of Service')
 

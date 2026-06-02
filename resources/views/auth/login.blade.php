@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Admin Login')
+@section('meta_robots', 'noindex, nofollow')
 
 @section('content')
 <div class="container" style="max-width:400px;padding:3rem 1rem;">

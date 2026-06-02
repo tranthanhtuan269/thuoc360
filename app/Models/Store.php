@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Support\PublicImage;
+use App\Support\Seo;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
@@ -86,5 +87,24 @@ class Store extends Model
         $words = preg_split('/\s+/', trim($this->name)) ?: [];
 
         return strtoupper(collect($words)->take(2)->map(fn ($w) => mb_substr($w, 0, 1))->implode(''));
+    }
+
+    public function seoTitle(): string
+    {
+        return "{$this->name} Coupons & Promo Codes";
+    }
+
+    public function seoDescription(): string
+    {
+        $count = $this->activeCouponsCount();
+        $base = $this->description
+            ?: "Browse {$count} verified {$this->name} coupon codes and discount deals. Updated daily on " . config('site.name') . '.';
+
+        return Seo::description($base);
+    }
+
+    public function ogImageUrl(): ?string
+    {
+        return $this->logoUrl();
     }
 }

@@ -1,6 +1,8 @@
 @extends('layouts.page')
 
 @section('title', 'Disclaimer')
+@section('meta_description', 'THUOC360 Disclaimer and FTC affiliate disclosure — accuracy of coupon codes, third-party offers, and liability limits.')
+@section('canonical', route('pages.disclaimer'))
 
 @section('page_title', 'Disclaimer & Affiliate Disclosure')
 

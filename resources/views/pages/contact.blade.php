@@ -1,6 +1,8 @@
 @extends('layouts.page')
 
 @section('title', 'Contact Us')
+@section('meta_description', 'Contact THUOC360 for partnership inquiries, coupon submissions, or support. We respond to U.S. shoppers and publishers.')
+@section('canonical', route('pages.contact'))
 
 @section('page_title', 'Contact Us')
 

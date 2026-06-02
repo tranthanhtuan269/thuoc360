@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Seo;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -110,5 +111,23 @@ class Coupon extends Model
     public function incrementClicks(): void
     {
         $this->increment('click_count');
+    }
+
+    public function seoTitle(): string
+    {
+        return "{$this->title} — {$this->store->name} {$this->typeLabel()}";
+    }
+
+    public function seoDescription(): string
+    {
+        $base = $this->description
+            ?: "Get {$this->discountLabel()} at {$this->store->name}. Verified {$this->typeLabel()} on " . config('site.name') . '.';
+
+        return Seo::description($base);
+    }
+
+    public function ogImageUrl(): ?string
+    {
+        return $this->store?->logoUrl();
     }
 }

@@ -1,6 +1,24 @@
 @extends('layouts.app')
 
-@section('title', 'All Coupons & Deals')
+@section('title', 'All Coupons & Promo Codes')
+@section('meta_description', 'Browse verified U.S. coupon codes and discount deals. Filter by promo codes or store offers — updated daily on ' . config('site.name') . '.')
+@section('canonical', $coupons->currentPage() > 1 ? $coupons->url($coupons->currentPage()) : route('coupons.index', array_filter(['type' => $type ?? null])))
+
+@push('head_links')
+    @include('partials.pagination-seo', ['paginator' => $coupons])
+@endpush
+
+@push('structured_data')
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": @json('Coupons & Deals — ' . config('site.name')),
+    "url": @json(route('coupons.index')),
+    "description": @json('Verified coupon codes and discount deals for U.S. online shoppers.')
+}
+</script>
+@endpush
 
 @section('content')
 <div class="container">

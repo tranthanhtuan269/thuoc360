@@ -1,6 +1,8 @@
 @extends('layouts.page')
 
 @section('title', 'About Us')
+@section('meta_description', 'Learn about THUOC360 — the Top Hub of US Online Coupons. Our mission, editorial standards, and how we help U.S. shoppers save.')
+@section('canonical', route('pages.about'))
 
 @section('page_title', 'About THUOC360')
 

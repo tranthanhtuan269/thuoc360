@@ -1,6 +1,13 @@
 @extends('layouts.app')
 
-@section('title', $q ? "Search: {$q}" : 'Search')
+@section('title', $q ? "Search: {$q}" : 'Search Coupons')
+@section('meta_description', $q ? "Search results for \"{$q}\" — coupon codes and deals on " . config('site.name') . '.' : 'Search coupon codes, stores, and deals.')
+@section('meta_robots', 'noindex, follow')
+@section('canonical', route('search', array_filter(['q' => $q])))
+
+@push('head_links')
+    @include('partials.pagination-seo', ['paginator' => $coupons])
+@endpush
 
 @section('content')
 <div class="container">
