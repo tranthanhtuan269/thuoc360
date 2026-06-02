@@ -11,7 +11,7 @@
 </div>
 @once
     @push('styles')
-        <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.snow.css" rel="stylesheet">
         <style>
             .quill-editor-mount {
                 background: #fff;
@@ -34,7 +34,7 @@
         </style>
     @endpush
     @push('scripts')
-        <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/quill@1.3.7/dist/quill.min.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 document.querySelectorAll('.quill-editor-mount').forEach(function (mount) {
@@ -59,7 +59,7 @@
                     });
 
                     if (source.value.trim()) {
-                        quill.clipboard.dangerouslyPasteHTML(source.value);
+                        quill.root.innerHTML = source.value;
                     }
 
                     var form = mount.closest('form');
