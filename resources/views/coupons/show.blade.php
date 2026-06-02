@@ -1,0 +1,53 @@
+@extends('layouts.app')
+
+@section('title', $coupon->title)
+
+@section('content')
+<div class="container">
+    <article class="coupon-detail">
+        <div class="coupon-detail-brand">
+            @include('partials.store-logo', ['store' => $coupon->store, 'size' => 'lg', 'showName' => true])
+        </div>
+        <span class="coupon-type">{{ $coupon->typeLabel() }}</span>
+        <div class="badge-lg">{{ $coupon->discountLabel() }}</div>
+        <h1>{{ $coupon->title }}</h1>
+        <p class="coupon-detail-meta">
+            @if($coupon->category)
+                <span>{{ $coupon->category->icon }} {{ $coupon->category->name }}</span>
+            @endif
+        </p>
+        @if($coupon->description)
+            <p style="margin:1rem 0;color:var(--muted);">{{ $coupon->description }}</p>
+        @endif
+        @if($coupon->expires_at)
+            <p><small>Expires: {{ $coupon->expires_at->format('m/d/Y g:i A') }}</small></p>
+        @endif
+
+        @if($coupon->code)
+            <div class="code-box" id="coupon-code">{{ $coupon->code }}</div>
+            <button type="button" class="btn btn-copy btn-primary" data-code="{{ $coupon->code }}" data-reveal-url="{{ route('coupons.reveal', $coupon->slug) }}" style="width:100%;margin-bottom:.5rem;">
+                Copy Code
+            </button>
+        @endif
+
+        <a href="{{ route('coupons.go', $coupon->slug) }}" class="btn btn-primary" style="width:100%;padding:.75rem;" target="_blank" rel="noopener">
+            Shop Now at {{ $coupon->store->name }}
+        </a>
+        <p class="coupon-trust-note">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/></svg>
+            Offer from verified retailer {{ $coupon->store->name }}. Terms apply on merchant site.
+        </p>
+    </article>
+
+    @if($related->isNotEmpty())
+    <section class="section">
+        <h2 class="section-title">More from {{ $coupon->store->name }}</h2>
+        <div class="coupon-grid">
+            @foreach($related as $item)
+                @include('partials.coupon-card', ['coupon' => $item])
+            @endforeach
+        </div>
+    </section>
+    @endif
+</div>
+@endsection

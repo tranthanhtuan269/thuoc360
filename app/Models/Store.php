@@ -1,0 +1,90 @@
+<?php
+
+namespace App\Models;
+
+use App\Support\PublicImage;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
+
+class Store extends Model
+{
+    protected $fillable = [
+        'name',
+        'slug',
+        'logo',
+        'website',
+        'description',
+        'sort_order',
+        'is_active',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Store $store) {
+            if (empty($store->slug)) {
+                $store->slug = Str::slug($store->name);
+            }
+        });
+    }
+
+    public function coupons(): HasMany
+    {
+        return $this->hasMany(Coupon::class);
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    public function activeCouponsCount(): int
+    {
+        return $this->coupons()->valid()->count();
+    }
+
+    public function domain(): ?string
+    {
+        if (! $this->website) {
+            return null;
+        }
+
+        $host = parse_url($this->website, PHP_URL_HOST);
+
+        return $host ? preg_replace('/^www\./', '', $host) : null;
+    }
+
+    public function hasStoredLogo(): bool
+    {
+        return PublicImage::isStored($this->logo);
+    }
+
+    public function logoUrl(): ?string
+    {
+        if ($this->logo) {
+            return PublicImage::url($this->logo);
+        }
+
+        $domain = $this->domain();
+
+        return $domain ? "https://logo.clearbit.com/{$domain}" : null;
+    }
+
+    public function faviconUrl(): ?string
+    {
+        $domain = $this->domain();
+
+        return $domain ? "https://www.google.com/s2/favicons?domain={$domain}&sz=128" : null;
+    }
+
+    public function initials(): string
+    {
+        $words = preg_split('/\s+/', trim($this->name)) ?: [];
+
+        return strtoupper(collect($words)->take(2)->map(fn ($w) => mb_substr($w, 0, 1))->implode(''));
+    }
+}
