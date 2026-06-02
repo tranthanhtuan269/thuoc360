@@ -33,9 +33,18 @@
                 <a href="{{ route('stores.index') }}">Stores</a>
                 <a href="{{ route('categories.index') }}">Categories</a>
                 <a href="{{ route('blog.index') }}">Blog</a>
-                @auth
-                    <a href="{{ route('admin.dashboard') }}" class="nav-admin">Admin</a>
-                @endauth
+                @guest
+                    <a href="{{ route('login') }}">Sign In</a>
+                    <a href="{{ route('register') }}" class="nav-register">Sign Up</a>
+                @else
+                    @if(auth()->user()->isAdmin())
+                        <a href="{{ route('admin.dashboard') }}" class="nav-admin">Admin</a>
+                    @endif
+                    <form action="{{ route('logout') }}" method="POST" class="nav-logout-form">
+                        @csrf
+                        <button type="submit" class="nav-logout-btn">Log out</button>
+                    </form>
+                @endguest
             </nav>
         </div>
     </header>
