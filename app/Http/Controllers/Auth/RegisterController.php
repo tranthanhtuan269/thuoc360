@@ -38,6 +38,6 @@ class RegisterController extends Controller
         Auth::login($user);
         $request->session()->regenerate();
 
-        return redirect()->route('home')->with('success', 'Welcome! Your account has been created.');
+        return redirect()->route('member.dashboard')->with('success', 'Welcome! Your account has been created.');
     }
 }

@@ -39,6 +39,8 @@
                 @else
                     @if(auth()->user()->isAdmin())
                         <a href="{{ route('admin.dashboard') }}" class="nav-admin">Admin</a>
+                    @else
+                        <a href="{{ route('member.dashboard') }}" class="nav-register">Dashboard</a>
                     @endif
                     <form action="{{ route('logout') }}" method="POST" class="nav-logout-form">
                         @csrf

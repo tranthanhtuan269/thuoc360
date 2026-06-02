@@ -4,13 +4,16 @@ namespace App\Models;
 
 use App\Support\PublicImage;
 use App\Support\Seo;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Store extends Model
 {
     protected $fillable = [
+        'user_id',
         'name',
         'slug',
         'logo',
@@ -18,6 +21,7 @@ class Store extends Model
         'description',
         'sort_order',
         'is_active',
+        'view_count',
     ];
 
     protected $casts = [
@@ -33,9 +37,24 @@ class Store extends Model
         });
     }
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function coupons(): HasMany
     {
         return $this->hasMany(Coupon::class);
+    }
+
+    public function scopeOwnedBy(Builder $query, int $userId): Builder
+    {
+        return $query->where('user_id', $userId);
+    }
+
+    public function incrementViews(): void
+    {
+        $this->increment('view_count');
     }
 
     public function scopeActive($query)

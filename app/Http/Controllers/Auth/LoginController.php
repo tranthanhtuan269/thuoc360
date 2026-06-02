@@ -27,7 +27,7 @@ class LoginController extends Controller
 
             $destination = Auth::user()->isAdmin()
                 ? route('admin.dashboard')
-                : route('home');
+                : route('member.dashboard');
 
             return redirect()->intended($destination);
         }

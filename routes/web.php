@@ -2,6 +2,10 @@
 
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Member\CouponController as MemberCouponController;
+use App\Http\Controllers\Member\DashboardController as MemberDashboardController;
+use App\Http\Controllers\Member\PostController as MemberPostController;
+use App\Http\Controllers\Member\StoreController as MemberStoreController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CouponController;
 use App\Http\Controllers\HomeController;
@@ -51,6 +55,13 @@ Route::middleware(['guest', 'noindex'])->group(function () {
 });
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+Route::middleware(['auth', 'noindex'])->prefix('dashboard')->name('member.')->group(function () {
+    Route::get('/', [MemberDashboardController::class, 'index'])->name('dashboard');
+    Route::resource('stores', MemberStoreController::class)->except(['show']);
+    Route::resource('coupons', MemberCouponController::class)->except(['show']);
+    Route::resource('posts', MemberPostController::class)->except(['show']);
+});
 
 Route::middleware(['auth', 'admin', 'noindex'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');

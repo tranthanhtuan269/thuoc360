@@ -20,6 +20,7 @@ class StoreController extends Controller
     public function show(string $slug): View
     {
         $store = Store::where('slug', $slug)->active()->firstOrFail();
+        $store->incrementViews();
 
         $coupons = $store->coupons()
             ->with('category')
