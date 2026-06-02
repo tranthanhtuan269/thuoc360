@@ -8,7 +8,7 @@
 
 ```bash
 sudo mkdir -p /var/www/thuoc360
-sudo rsync -a --exclude='.git' --exclude='node_modules' --exclude='public/storage' ./ /var/www/thuoc360/
+sudo rsync -a --exclude='.git' --exclude='node_modules' --exclude='public/storage' --exclude='.env' ./ /var/www/thuoc360/
 cd /var/www/thuoc360
 composer install --no-dev --optimize-autoloader
 cp .env.example .env && php artisan key:generate
