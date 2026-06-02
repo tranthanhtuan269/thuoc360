@@ -20,6 +20,7 @@ class Store extends Model
         'logo',
         'website',
         'description',
+        'category_id',
         'sort_order',
         'is_active',
         'view_count',
@@ -41,6 +42,11 @@ class Store extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
     }
 
     public function coupons(): HasMany

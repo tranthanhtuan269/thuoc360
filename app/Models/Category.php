@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Support\Seo;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Support\Str;
 
 class Category extends Model
@@ -31,9 +32,14 @@ class Category extends Model
         });
     }
 
-    public function coupons(): HasMany
+    public function stores(): HasMany
     {
-        return $this->hasMany(Coupon::class);
+        return $this->hasMany(Store::class);
+    }
+
+    public function coupons(): HasManyThrough
+    {
+        return $this->hasManyThrough(Coupon::class, Store::class);
     }
 
     public function scopeActive($query)

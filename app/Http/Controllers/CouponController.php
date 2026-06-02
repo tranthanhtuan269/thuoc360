@@ -14,7 +14,7 @@ class CouponController extends Controller
     {
         $type = $request->get('type');
 
-        $coupons = Coupon::with(['store', 'category'])
+        $coupons = Coupon::with(['store.category'])
             ->valid()
             ->ofType($type)
             ->latest()
@@ -26,7 +26,7 @@ class CouponController extends Controller
 
     public function show(string $slug): View
     {
-        $coupon = Coupon::with(['store', 'category'])
+        $coupon = Coupon::with(['store.category'])
             ->where('slug', $slug)
             ->active()
             ->firstOrFail();

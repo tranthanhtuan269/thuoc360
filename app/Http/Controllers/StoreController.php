@@ -19,11 +19,13 @@ class StoreController extends Controller
 
     public function show(string $slug): View
     {
-        $store = Store::where('slug', $slug)->active()->firstOrFail();
+        $store = Store::with('category')
+            ->where('slug', $slug)
+            ->active()
+            ->firstOrFail();
         $store->incrementViews();
 
         $coupons = $store->coupons()
-            ->with('category')
             ->valid()
             ->latest()
             ->paginate(16);

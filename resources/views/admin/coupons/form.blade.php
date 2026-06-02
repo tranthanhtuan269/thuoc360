@@ -17,15 +17,6 @@
         </select>
     </div>
     <div class="form-group">
-        <label>Category</label>
-        <select name="category_id">
-            <option value="">— None —</option>
-            @foreach($categories as $c)
-                <option value="{{ $c->id }}" @selected(old('category_id', $coupon->category_id) == $c->id)>{{ $c->name }}</option>
-            @endforeach
-        </select>
-    </div>
-    <div class="form-group">
         <label>Title *</label>
         <input type="text" name="title" value="{{ old('title', $coupon->title) }}" required>
     </div>

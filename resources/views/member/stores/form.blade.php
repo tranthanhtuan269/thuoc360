@@ -19,6 +19,7 @@
         <p class="form-hint">Upload JPG, PNG or WebP (max 2MB). Files are saved in your account folder <code>stores/{{ auth()->id() }}/</code>. Or paste an external image URL below.</p>
         <input name="logo" value="{{ old('logo', $store->hasStoredLogo() ? '' : $store->logo) }}" placeholder="https://example.com/logo.png" style="margin-top:.5rem;">
     </div>
+    @include('partials.store-category-field', ['store' => $store, 'categories' => $categories])
     @include('partials.store-website-field', ['store' => $store])
     @include('partials.store-description-editor', ['value' => $store->description, 'editorId' => 'store-description'])
     <div class="form-check">

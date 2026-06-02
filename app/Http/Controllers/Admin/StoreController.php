@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Concerns\ValidatesStoreInput;
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Store;
 use App\Support\PublicImage;
 use Illuminate\Http\RedirectResponse;
@@ -23,7 +24,10 @@ class StoreController extends Controller
 
     public function create(): View
     {
-        return view('admin.stores.form', ['store' => new Store()]);
+        return view('admin.stores.form', [
+            'store' => new Store(),
+            'categories' => Category::orderBy('name')->get(),
+        ]);
     }
 
     public function store(Request $request): RedirectResponse
@@ -38,7 +42,10 @@ class StoreController extends Controller
 
     public function edit(Store $store): View
     {
-        return view('admin.stores.form', compact('store'));
+        return view('admin.stores.form', [
+            'store' => $store,
+            'categories' => Category::orderBy('name')->get(),
+        ]);
     }
 
     public function update(Request $request, Store $store): RedirectResponse

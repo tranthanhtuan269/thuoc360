@@ -14,7 +14,6 @@ class Coupon extends Model
     protected $fillable = [
         'user_id',
         'store_id',
-        'category_id',
         'title',
         'slug',
         'description',
@@ -60,11 +59,6 @@ class Coupon extends Model
     public function scopeOwnedBy(Builder $query, int $userId): Builder
     {
         return $query->where('user_id', $userId);
-    }
-
-    public function category(): BelongsTo
-    {
-        return $this->belongsTo(Category::class);
     }
 
     public function scopeActive(Builder $query): Builder

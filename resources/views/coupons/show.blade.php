@@ -44,8 +44,8 @@
         <div class="badge-lg">{{ $coupon->discountLabel() }}</div>
         <h1>{{ $coupon->title }}</h1>
         <p class="coupon-detail-meta">
-            @if($coupon->category)
-                <span>{{ $coupon->category->icon }} {{ $coupon->category->name }}</span>
+            @if($coupon->store?->category)
+                <span>{{ $coupon->store->category->icon }} {{ $coupon->store->category->name }}</span>
             @endif
         </p>
         @if($coupon->description)

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Member;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use App\Models\Coupon;
 use App\Models\Store;
 use Illuminate\Http\RedirectResponse;
@@ -18,7 +17,7 @@ class CouponController extends Controller
     {
         $this->authorize('viewAny', Coupon::class);
 
-        $coupons = Coupon::with(['store', 'category'])
+        $coupons = Coupon::with(['store.category'])
             ->ownedBy(auth()->id())
             ->latest()
             ->paginate(20);
@@ -38,12 +37,9 @@ class CouponController extends Controller
                 ->with('error', 'Create a store before adding coupons.');
         }
 
-        $categories = Category::orderBy('name')->get();
-
         return view('member.coupons.form', [
             'coupon' => new Coupon(),
             'stores' => $stores,
-            'categories' => $categories,
         ]);
     }
 
@@ -65,9 +61,8 @@ class CouponController extends Controller
         $this->authorize('update', $coupon);
 
         $stores = Store::ownedBy(auth()->id())->orderBy('name')->get();
-        $categories = Category::orderBy('name')->get();
 
-        return view('member.coupons.form', compact('coupon', 'stores', 'categories'));
+        return view('member.coupons.form', compact('coupon', 'stores'));
     }
 
     public function update(Request $request, Coupon $coupon): RedirectResponse
@@ -96,7 +91,6 @@ class CouponController extends Controller
                 'required',
                 Rule::exists('stores', 'id')->where(fn ($q) => $q->where('user_id', auth()->id())),
             ],
-            'category_id' => ['nullable', 'exists:categories,id'],
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'code' => ['nullable', 'string', 'max:100'],
@@ -112,7 +106,6 @@ class CouponController extends Controller
 
         $data['is_featured'] = $request->boolean('is_featured');
         $data['is_active'] = $request->boolean('is_active', true);
-        $data['category_id'] = $data['category_id'] ?: null;
 
         return $data;
     }

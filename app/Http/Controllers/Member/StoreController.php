@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Member;
 
 use App\Http\Controllers\Concerns\ValidatesStoreInput;
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Store;
 use App\Support\PublicImage;
 use Illuminate\Http\RedirectResponse;
@@ -30,7 +31,10 @@ class StoreController extends Controller
     {
         $this->authorize('create', Store::class);
 
-        return view('member.stores.form', ['store' => new Store()]);
+        return view('member.stores.form', [
+            'store' => new Store(),
+            'categories' => Category::active()->orderBy('name')->get(),
+        ]);
     }
 
     public function store(Request $request): RedirectResponse
@@ -51,7 +55,10 @@ class StoreController extends Controller
     {
         $this->authorize('update', $store);
 
-        return view('member.stores.form', compact('store'));
+        return view('member.stores.form', [
+            'store' => $store,
+            'categories' => Category::active()->orderBy('name')->get(),
+        ]);
     }
 
     public function update(Request $request, Store $store): RedirectResponse

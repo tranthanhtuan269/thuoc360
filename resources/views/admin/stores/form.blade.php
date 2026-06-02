@@ -20,6 +20,7 @@
         <p class="form-hint">Saved under <code>stores/{{ $ownerId }}/</code> when uploaded. JPG, PNG or WebP (max 2MB).</p>
         <input name="logo" value="{{ old('logo', $store->hasStoredLogo() ? '' : $store->logo) }}" placeholder="https://example.com/logo.png" style="margin-top:.5rem;">
     </div>
+    @include('partials.store-category-field', ['store' => $store, 'categories' => $categories])
     @include('partials.store-website-field', ['store' => $store])
     @include('partials.store-description-editor', ['value' => $store->description, 'editorId' => 'admin-store-description'])
     <div class="form-group"><label>Sort order</label><input type="number" name="sort_order" value="{{ old('sort_order', $store->sort_order ?? 0) }}"></div>

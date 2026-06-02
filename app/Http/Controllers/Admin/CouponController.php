@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use App\Models\Coupon;
 use App\Models\Store;
 use Illuminate\Http\RedirectResponse;
@@ -15,7 +14,7 @@ class CouponController extends Controller
 {
     public function index(): View
     {
-        $coupons = Coupon::with(['store', 'category'])->latest()->paginate(20);
+        $coupons = Coupon::with(['store.category'])->latest()->paginate(20);
 
         return view('admin.coupons.index', compact('coupons'));
     }
@@ -23,12 +22,10 @@ class CouponController extends Controller
     public function create(): View
     {
         $stores = Store::orderBy('name')->get();
-        $categories = Category::orderBy('name')->get();
 
         return view('admin.coupons.form', [
             'coupon' => new Coupon(),
             'stores' => $stores,
-            'categories' => $categories,
         ]);
     }
 
@@ -45,9 +42,8 @@ class CouponController extends Controller
     public function edit(Coupon $coupon): View
     {
         $stores = Store::orderBy('name')->get();
-        $categories = Category::orderBy('name')->get();
 
-        return view('admin.coupons.form', compact('coupon', 'stores', 'categories'));
+        return view('admin.coupons.form', compact('coupon', 'stores'));
     }
 
     public function update(Request $request, Coupon $coupon): RedirectResponse
@@ -69,7 +65,6 @@ class CouponController extends Controller
     {
         $data = $request->validate([
             'store_id' => ['required', 'exists:stores,id'],
-            'category_id' => ['nullable', 'exists:categories,id'],
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'code' => ['nullable', 'string', 'max:100'],
@@ -85,7 +80,6 @@ class CouponController extends Controller
 
         $data['is_featured'] = $request->boolean('is_featured');
         $data['is_active'] = $request->boolean('is_active', true);
-        $data['category_id'] = $data['category_id'] ?: null;
 
         return $data;
     }

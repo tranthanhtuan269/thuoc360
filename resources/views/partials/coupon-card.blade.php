@@ -13,8 +13,8 @@
         @if($coupon->store)
             <a href="{{ route('stores.show', $coupon->store->slug) }}">{{ $coupon->store->name }}</a>
         @endif
-        @if($coupon->category)
-            <span class="coupon-cat">{{ $coupon->category->icon }} {{ $coupon->category->name }}</span>
+        @if($coupon->store?->category)
+            <span class="coupon-cat">{{ $coupon->store->category->icon }} {{ $coupon->store->category->name }}</span>
         @endif
     </div>
     @if($coupon->expires_at)

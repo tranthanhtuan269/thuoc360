@@ -17,6 +17,7 @@ trait ValidatesStoreInput
             'logo_file' => ['nullable', 'image', 'max:2048'],
             'website' => ['nullable', 'url', 'max:500'],
             'description' => ['nullable', 'string'],
+            'category_id' => ['nullable', 'exists:categories,id'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
             'is_active' => ['boolean'],
         ], [
@@ -25,6 +26,7 @@ trait ValidatesStoreInput
 
         $data['slug'] = StoreSlug::make($data['name'], $request->input('slug'), $store?->id);
         $data['is_active'] = $request->boolean('is_active', true);
+        $data['category_id'] = filled($data['category_id'] ?? null) ? $data['category_id'] : null;
         $data['sort_order'] = $data['sort_order'] ?? 0;
         $data['description'] = HtmlCleaner::clean($data['description'] ?? null);
 

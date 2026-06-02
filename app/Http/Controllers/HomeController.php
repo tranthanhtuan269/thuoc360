@@ -13,14 +13,14 @@ class HomeController extends Controller
 {
     public function index(): View
     {
-        $featuredCoupons = Coupon::with(['store', 'category'])
+        $featuredCoupons = Coupon::with(['store.category'])
             ->valid()
             ->featured()
             ->latest()
             ->take(8)
             ->get();
 
-        $latestCoupons = Coupon::with(['store', 'category'])
+        $latestCoupons = Coupon::with(['store.category'])
             ->valid()
             ->latest()
             ->take(12)
@@ -54,7 +54,7 @@ class HomeController extends Controller
     {
         $q = trim($request->get('q', ''));
 
-        $coupons = Coupon::with(['store', 'category'])
+        $coupons = Coupon::with(['store.category'])
             ->valid()
             ->when($q, function ($query) use ($q) {
                 $query->where(function ($sub) use ($q) {
